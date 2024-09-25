@@ -98,7 +98,63 @@ process.once('SIGINT', () => {
     bot.stop('SIGINT');
     client.close(); // Close MongoDB connection
 });
+// server.js
+const express = require('express');
+const mongoose = require('mongoose');
+const app = express();
+const port = process.env.PORT || 3000;
 
+// Connect to MongoDB
+mongoose.connect('mongodb://localhost/your_database', { useNewUrlParser: true, useUnifiedTopology: true });
+
+// Define User Schema
+const userSchema = new mongoose.Schema({
+  userId: String,
+  coinsEarned: Number,
+  referrals: Number,
+  walletId: String
+});
+
+const User = mongoose.model('User', userSchema);
+
+app.use(express.json());
+
+// Route to update user data
+app.post('/api/updateUser', async (req, res) => {
+  const { userId, coinsEarned, referrals, walletId } = req.body;
+  
+  try {
+    const user = await User.findOneAndUpdate(
+      { userId },
+      { coinsEarned, referrals, walletId },
+      { new: true, upsert: true }
+    );
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+});
+
+// frontend.js (to be added to your existing frontend code)
+function updateUserData(userId, coinsEarned, referrals, walletId) {
+  fetch('/api/updateUser', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ userId, coinsEarned, referrals, walletId }),
+  })
+  .then(response => response.json())
+  .then(data => console.log('User data updated:', data))
+  .catch((error) => console.error('Error:', error));
+}
+
+// Call this function whenever user data changes
+// For example: updateUserData('user123', 100, 5, 'wallet456');
 process.once('SIGTERM', () => {
     console.log("Stopping bot...");
     bot.stop('SIGTERM');
