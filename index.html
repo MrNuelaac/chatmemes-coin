@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatmemes Coin</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1a2a3a;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .coin-count, .member-count {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 1;
+        }
+
+        .coin-image {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            margin-bottom: 20px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .claim-button {
+            padding: 15px 30px;
+            font-size: 18px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .claim-button.green {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .claim-button.red {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .bottom-buttons {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .bottom-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            background-color: #3498db;
+            color: white;
+            transition: background-color 0.3s;
+        }
+
+        .bottom-button:hover {
+            background-color: #2980b9;
+        }
+
+        .panel {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #2c3e50;
+            padding: 20px;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .panel-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+        }
+
+        .panel-link {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .claim-task-button, .claim-boost-button {
+            display: none;
+            margin-top: 5px;
+            background-color: #27ae60;
+        }
+
+        #tonWalletInput {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <span class="coin-count">Coins: <span id="coinCount">0</span></span>
+        <span class="member-count">Members: <span id="memberCount">1</span></span>
+    </div>
+
+    <div class="main-content">
+        <div id="coinImage" class="coin-image"></div>
+        <button id="claimButton" class="claim-button green">Claim Coin</button>
+    </div>
+
+    <div class="bottom-buttons">
+        <button class="bottom-button" onclick="showPanel('tasksPanel')">Tasks</button>
+        <button class="bottom-button" onclick="showPanel('boostPanel')">Boost</button>
+        <button class="bottom-button" onclick="showPanel('referralsPanel')">Referrals</button>
+        <button class="bottom-button" onclick="showPoolVideo()">$-Pool</button>
+    </div>
+
+    <div id="tasksPanel" class="panel">
+        <span class="panel-close" onclick="hidePanel('tasksPanel')">×</span>
+        <a href="#" class="panel-link task-link" data-task="twitter" data-url="https://twitter.com/YourTwitterPage">Follow our Twitter page +250</a>
+        <button class="panel-link claim-task-button" id="claimTwitter" onclick="claimTask('twitter')">Claim</button>
+        <a href="#" class="panel-link task-link" data-task="facebook" data-url="https://facebook.com/YourFacebookPage">Follow our Facebook page +250</a>
+        <button class="panel-link claim-task-button" id="claimFacebook" onclick="claimTask('facebook')">Claim</button>
+        <a href="#" class="panel-link task-link" data-task="youtube" data-url="https://youtube.com/YourYouTubeChannel">Subscribe to our YouTube channel +250</a>
+        <button class="panel-link claim-task-button" id="claimYoutube" onclick="claimTask('youtube')">Claim</button>
+        <a href="#" class="panel-link task-link" data-task="instagram" data-url="https://instagram.com/YourInstagramPage">Follow our Instagram page +250</a>
+        <button class="panel-link claim-task-button" id="claimInstagram" onclick="claimTask('instagram')">Claim</button>
+        <a href="#" class="panel-link task-link" data-task="tiktok" data-url="https://tiktok.com/@YourTikTokAccount">Follow our TikTok Account +250</a>
+        <button class="panel-link claim-task-button" id="claimTiktok" onclick="claimTask('tiktok')">Claim</button>
+        <a href="#" class="panel-link task-link" data-task="telegram" data-url="https://t.me/YourTelegramChannel">Join our Telegram Channel +250</a>
+        <button class="panel-link claim-task-button" id="claimTelegram" onclick="claimTask('telegram')">Claim</button>
+        <a href="#" class="panel-link task-link" data-task="telegram" data-url="https://www.ultraproex.com/register/?refCode=UTX69684840">Create Ultrapro Wallet +250</a>
+        <button class="panel-link claim-task-button" id="claimTelegram" onclick="claimTask('telegram')">Claim</button>
+        <input type="text" id="tonWalletInput" placeholder="Enter your Ultrapro wallet address">
+        <button class="panel-link" onclick="addTonWallet()">Click Here to Add Wallet</button>
+    </div>
+
+    <div id="boostPanel" class="panel">
+        <span class="panel-close" onclick="hidePanel('boostPanel')">×</span>
+        <a href="#" class="panel-link boost-link" data-boost="watchVideo" data-coins="2500">Watch Video +2500</a>
+        <button class="panel-link claim-boost-button" id="claimWatchVideo" onclick="claimBoost('watchVideo')">Claim</button>
+        <a href="#" class="panel-link boost-link" data-boost="likeComment" data-coins="1125">Like and Comment +1125</a>
+        <button class="panel-link claim-boost-button" id="claimLikeComment" onclick="claimBoost('likeComment')">Claim</button>
+        <a href="#" class="panel-link boost-link" data-boost="shareVideo" data-coins="1125">Share Video and Tag Us +1125</a>
+        <button class="panel-link claim-boost-button" id="claimShareVideo" onclick="claimBoost('shareVideo')">Claim</button>
+
+    </div>
+
+    <div id="referralsPanel" class="panel">
+        <span class="panel-close" onclick="hidePanel('referralsPanel')">×</span>
+        <p>Your referral link: <span id="referralLink"></span></p>
+        <p>Referrals: <span id="referralCount">0</span></p>
+    </div>
+
+    <script>
+        let coins = 0;
+        let lastClaimTime = 0;
+        const claimCooldown = 3 * 60 * 60 * 1000; // 3 hours in milliseconds
+        const claimAmount = 462.96;
+
+        const coinCountElement = document.getElementById('coinCount');
+        const claimButton = document.getElementById('claimButton');
+        const memberCountElement = document.getElementById('memberCount');
+        const coinImage = document.getElementById('coinImage');
+
+        // Set coin image (replace with your image URL)
+        coinImage.style.backgroundImage = "url('https://example.com/path/to/your/coin-image.jpg')";
+
+        // Object to track completed tasks and boosts
+        const completedTasks = {
+            twitter: false,
+            facebook: false,
+            youtube: false,
+            instagram: false,
+            tiktok: false,
+            telegram: false
+        };
+
+        const completedBoosts = {
+            watchVideo: false,
+            likeComment: false,
+            shareVideo: false
+        };
+
+        // Configuration object for boost links
+        const boostConfig = {
+            watchVideo: {
+                url: 'https://youtu.be/Fsct-CPldPY?si=I-ywZ8cpDtB-jHqM',
+                coins: 2500
+            },
+            likeComment: {
+                url: 'https://www.facebook.com/share/p/2NGKyUHoVjP7t7wM/',
+                coins: 1125
+            },
+            shareVideo: {
+                url: 'https://www.facebook.com/share/p/uPMFdgdjdMtsDHVh/',
+                coins: 1125
+            }
+        };
+
+        function updateCoinCount() {
+            coinCountElement.textContent = coins.toFixed(2);
+        }
+
+        function startCountdown() {
+            const endTime = Date.now() + claimCooldown;
+            
+            function updateCountdown() {
+                const remainingTime = endTime - Date.now();
+                if (remainingTime <= 0) {
+                    claimButton.classList.remove('red');
+                    claimButton.classList.add('green');
+                    claimButton.textContent = 'Claim Coin';
+                    claimButton.disabled = false;
+                } else {
+                    const hours = Math.floor(remainingTime / (60 * 60 * 1000));
+                    const minutes = Math.floor((remainingTime % (60 * 60 * 1000)) / (60 * 1000));
+                    const seconds = Math.floor((remainingTime % (60 * 1000)) / 1000);
+                    claimButton.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                    setTimeout(updateCountdown, 1000);
+                }
+            }
+
+            updateCountdown();
+        }
+
+        function claimCoins() {
+            const currentTime = Date.now();
+            if (currentTime - lastClaimTime >= claimCooldown) {
+                coins += claimAmount;
+                updateCoinCount();
+                lastClaimTime = currentTime;
+                claimButton.classList.remove('green');
+                claimButton.classList.add('red');
+                claimButton.disabled = true;
+                startCountdown();
+            }
+        }
+
+        claimButton.addEventListener('click', claimCoins);
+
+        function showPanel(panelId) {
+            document.getElementById(panelId).style.display = 'block';
+        }
+
+        function hidePanel(panelId) {
+            document.getElementById(panelId).style.display = 'none';
+        }
+
+        function startTask(task, url) {
+            window.open(url, '_blank');
+            document.getElementById('claim' + task.charAt(0).toUpperCase() + task.slice(1)).style.display = 'block';
+        }
+
+        function claimTask(task) {
+            if (!completedTasks[task]) {
+                coins += 250;
+                updateCoinCount();
+                completedTasks[task] = true;
+                document.getElementById('claim' + task.charAt(0).toUpperCase() + task.slice(1)).style.display = 'none';
+            }
+        }
+
+        document.querySelectorAll('.task-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const task = e.target.dataset.task;
+                const url = e.target.dataset.url;
+                startTask(task, url);
+            });
+        });
+
+        function addTonWallet() {
+            const walletAddress = document.getElementById('tonWalletInput').value;
+            if (walletAddress) {
+                console.log('Wallet added:', walletAddress);
+                alert('Wallet added successfully!');
+            } else {
+                alert('Please enter a valid wallet address.');
+            }
+        }
+    
+        function startBoost(boost) {
+            const boostInfo = boostConfig[boost];
+            if (boostInfo) {
+                window.open(boostInfo.url, '_blank');
+                document.getElementById('claim' + boost.charAt(0).toUpperCase() + boost.slice(1)).style.display = 'block';
+            }
+        }
+
+        function claimBoost(boost) {
+            if (!completedBoosts[boost]) {
+                const boostInfo = boostConfig[boost];
+                if (boostInfo) {
+                    coins += boostInfo.coins;
+                    updateCoinCount();
+                    completedBoosts[boost] = true;
+                    document.getElementById('claim' + boost.charAt(0).toUpperCase() + boost.slice(1)).style.display = 'none';
+                }
+            }
+        }
+
+        document.querySelectorAll('.boost-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const boost = e.target.dataset.boost;
+                startBoost(boost);
+            });
+        });
+
+        function updateBoostLink(boost, newUrl, newCoins) {
+            if (boostConfig[boost]) {
+                boostConfig[boost].url = newUrl;
+                boostConfig[boost].coins = newCoins;
+                const link = document.querySelector(`.boost-link[data-boost="${boost}"]`);
+                if (link) {
+                    link.textContent = `${link.textContent.split('+')[0]}+${newCoins}`;
+                    link.dataset.coins = newCoins;
+                }
+            }
+        }
+
+        function showPoolVideo() {
+            window.open('https://youtu.be/eYFtGyboXqo?si=Skju6HEMXUNaGiCJ', '_blank');
+        }
+
+        document.getElementById('referralLink').textContent = `https://chatmemes.coin/ref/${Math.random().toString(36).substr(2, 9)}`;
+
+        updateCoinCount();
+    </script>
+</body>
+</html>
